@@ -1,0 +1,34 @@
+name: hello
+version: '0.1.1'
+synopsis: Hello
+author: Andrew Cowie <andrew.cowie@cba.com.au>
+maintainer: Andrew Cowie <andrew.cowie@cba.com.au>
+copyright: © 2019-2020 Commonwealth Bank of Australia
+license: AllRightsReserved
+tested-with: GHC==8.6
+
+ghc-options: -Wall -Wwarn -fwarn-tabs
+
+dependencies:
+  - base
+  - bytestring
+  - cassava
+  - unordered-containers
+  - vector
+
+executables:
+  csv:
+    source-dirs:
+      - src
+    main: CsvMain.hs
+    ghc-options: -threaded
+
+tests:
+  check:
+    dependencies:
+      - hspec
+    ghc-options: -threaded
+    source-dirs:
+      - tests
+    main: TestSuite.hs
+    other-modules: []
