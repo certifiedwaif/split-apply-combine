@@ -1,4 +1,4 @@
-name: hello
+name: split-apply-combine
 version: '0.1.1'
 synopsis: Hello
 author: Andrew Cowie <andrew.cowie@cba.com.au>
@@ -13,7 +13,7 @@ dependencies:
   - base
   - bytestring
   - cassava
-  - unordered-containers
+  - containers
   - vector
 
 executables:

@@ -5,16 +5,16 @@ module Main where
 
 import qualified Data.ByteString.Lazy as BL
 import Data.Csv
-import Data.Either
-import Data.HashMap as M
+import Data.List (map, foldl)
+import Data.Map (Map, member, insert, empty, (!), keys)
 import qualified Data.Vector as V
-import Prelude
+
+type MyMap = Map (String, String) [Double]
 
 main :: IO ()
 main
   -- datestamp, fieldname, value
  = do
-  let dateStampToValue :: M.Map String Double = M.empty
   csvData <- BL.readFile "data.csv"
   case decode HasHeader csvData of
     Left err -> putStrLn err
@@ -22,10 +22,11 @@ main
      -> do
       let vl = V.toList v
           vm = buildMaps vl
-          keys = keys vm
-      map (\k -> mean $ vm ! k) keys
+          vmKeys = keys vm
+      putStrLn $ show $ map (\k -> mean $ vm ! k) vmKeys
   where
-    mean l = sum l / fromIntegral . length l
+    mean :: [Double] -> Double
+    mean l = sum l / (fromIntegral $ length l)
        -- For each key tuple, calculate the mean
       -- V.forM_ v $ \(datestamp :: String, fieldname :: String, value :: Double) ->
       --   putStrLn $ datestamp ++ " " ++ fieldname ++ " " ++ show value
@@ -39,19 +40,17 @@ main
   -- Create a program that creates two threads, gets a stream of integers
   -- and then gets their maximum
   -- Parallelism and Concurrency in Haskell
-
-type MyMap = M.Map (String, String) [Double]
-
 buildMaps :: [(String, String, Double)] -> MyMap
-buildMaps [(datestamp, field, value)]
-  -- This isn't going to work, because the Map values aren't Lists.
-  -- I think I need a fold.
+buildMaps l@[(datestamp, field, value)]
  =
-  let emptyMap :: MyMap = M.empty
-   in foldl addOne emptyMap $ map (\a b c -> ((a, b), c))
+  let emptyMap :: MyMap = empty
+   in foldl addOne emptyMap $ map (\(a, b, c) -> ((a, b), c)) l
   where
     addOne :: MyMap -> ((String, String), Double) -> MyMap
-    addOne map ((a, b), c) =
-      if M.member map (a, b)
-        then M.insert map (a, b) (map ! (a, b) : c)
-        else M.insert map (a, b) []
+    addOne map' ((a, b), c) =
+      if member (a, b) map'
+        then
+          let newValue :: [Double] = (map' ! (a, b)) ++ [c]
+          in
+          insert (a, b) newValue map'
+        else insert (a, b) [] map'
