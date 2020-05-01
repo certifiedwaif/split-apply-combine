@@ -50,7 +50,7 @@ buildMaps l@[(datestamp, field, value)]
     addOne map' ((a, b), c) =
       if member (a, b) map'
         then
-          let newValue :: [Double] = (map' ! (a, b)) ++ [c]
+          let newValue :: [Double] =  c : (map' ! (a, b))
           in
           insert (a, b) newValue map'
         else insert (a, b) [] map'
