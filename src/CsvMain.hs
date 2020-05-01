@@ -23,6 +23,7 @@ main
       let vl = V.toList v
           vm = buildMaps vl
           vmKeys = keys vm
+      putStrLn $ show vm
       putStrLn $ show $ map (\k -> mean $ vm ! k) vmKeys
   where
     mean :: [Double] -> Double
@@ -41,7 +42,7 @@ main
   -- and then gets their maximum
   -- Parallelism and Concurrency in Haskell
 buildMaps :: [(String, String, Double)] -> MyMap
-buildMaps l@[(datestamp, field, value)]
+buildMaps l
  =
   let emptyMap :: MyMap = empty
    in foldl addOne emptyMap $ map (\(a, b, c) -> ((a, b), c)) l
@@ -53,4 +54,5 @@ buildMaps l@[(datestamp, field, value)]
           let newValue :: [Double] =  c : (map' ! (a, b))
           in
           insert (a, b) newValue map'
-        else insert (a, b) [] map'
+        else
+          insert (a, b) [c] map'
