@@ -24,23 +24,11 @@ main
           vm = buildMaps vl
           vmKeys = keys vm
       putStrLn $ show vm
-      putStrLn $ show $ map (\k -> mean $ vm ! k) vmKeys
+      putStrLn $ show $ map (\k -> (k, mean $ vm ! k)) vmKeys
   where
     mean :: [Double] -> Double
     mean l = sum l / (fromIntegral $ length l)
-       -- For each key tuple, calculate the mean
-      -- V.forM_ v $ \(datestamp :: String, fieldname :: String, value :: Double) ->
-      --   putStrLn $ datestamp ++ " " ++ fieldname ++ " " ++ show value
-  -- Split-apply-combine pattern
-  -- How do you have a program do something every minute?
-  -- sleep
-  -- fork a new thread
-  -- access variables shared between threads - MVar
-  -- connection pools
-  --
-  -- Create a program that creates two threads, gets a stream of integers
-  -- and then gets their maximum
-  -- Parallelism and Concurrency in Haskell
+
 buildMaps :: [(String, String, Double)] -> MyMap
 buildMaps l
  =
